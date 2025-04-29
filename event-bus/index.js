@@ -4,10 +4,13 @@ const axios = require('axios');
 
 const app = express();
 app.use(bodyParser.json());
+const events = [];
 
+app.get('/events', (req, res) => res.send(events) );
 app.post('/events', (req, res) => {
     const event = req.body;
     console.log({event})
+    events.push(event);
 
     const services = [
         {url: 'http://localhost:4000/events', name: 'post service'},
@@ -22,6 +25,7 @@ app.post('/events', (req, res) => {
             })
             .catch(err => console.log(`${name} failed ${err.message}`) );
     });
+    Promise.all(promises);
     res.send({status: 'Ok'});
 });
 
