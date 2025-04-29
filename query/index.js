@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const axios = require('axios');
 const cors = require('cors');
 
 const app = express();
@@ -12,7 +11,9 @@ const posts = [];
 
 //list of posts/ comments
 app.get('/posts', (req, res) =>{
-    res.send(posts)
+    // posts.map((post => post.comments.filter((comment) => comment.status === 'approved') )
+
+    res.send(posts);
 });
 
 
@@ -23,13 +24,27 @@ app.post('/events', (req, res) => {
         posts.push({id, title, comments: []});
     }
     if(type === 'CommentCreated') {
-        const {id, content, postId} = data;
+        const {id, content, postId, status} = data;
         console.log({posts})
         console.log({postId})
         const post = posts.find((post) => postId === post.id);
-        post.comments.push({id, content});
+        post.comments.push({id, content, status});
     }
-    console.log(JSON.stringify(posts));
+    if(type === 'CommentUpdated') {
+        const {id, postId, content, status} = data;
+        console.log({data})
+        console.log(JSON.stringify(posts))
+        const post = posts.find((post) => post.id === postId);
+        let updatedComment = post?.comments.find((comment) => comment.id === id);
+        console.log({updatedComment})
+        if(updatedComment.id){
+            updatedComment.content = content;
+            updatedComment.status = status;
+        }
+        console.log({post});
+    }
+
+        console.log(JSON.stringify(posts));
     res.send({});
 });
 
