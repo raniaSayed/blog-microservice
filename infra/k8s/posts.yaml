@@ -1,0 +1,10 @@
+#posts.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: posts
+
+spec:
+  containers:
+    - name: posts
+      image: raniasayed/posts:0.0.1
