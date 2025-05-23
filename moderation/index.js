@@ -10,20 +10,21 @@ app.use(bodyParser.json());
 //commentCreated should be moderated.
 app.post('/events', async (req, res) => {
    const {type, data} = req.body;
-   if(type === 'CommentCreated'){
+    console.log('Received Event:', req.body.type);
+    if(type === 'CommentCreated'){
        const status = (data.content.indexOf('orange') > -1)?
             'rejected': 'approved';
 
        data.status = status;
-       await axios.post('http://localhost:4005/events',
+       await axios.post('http://event-bus-service:4005/events',
            {
            data,
            type: 'CommentModerated',
            });//event bus service
 
-       res.send(data);
    }
 
+    res.send(data);
 
 })//.catch((err) => console.log(err.message));
 
